@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Shoe Order - POST via Fetch API (Week 10)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: #1e293b;
+            padding: 30px 15px;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 35px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            color: #1e3a8a;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #334155;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #2563eb;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #2563eb;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+        }
+
+        button:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        /* Result Receipt Card */
+        .receipt {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .receipt-success {
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-left: 5px solid #22c55e;
+            color: #166534;
+        }
+
+        .receipt-error {
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+            border-left: 5px solid #ef4444;
+            color: #991b1b;
+        }
+
+        .receipt h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .receipt-details {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-top: 10px;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 10px;
+        }
+
+        .receipt-details strong {
+            color: #0f172a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>SoleStride Shoes — Order Checkout</h2>
+        <p class="subtitle">Week 10 Lab: Asynchronous POST Request using Fetch API with Node.js backend</p>
+
+        <form id="orderForm">
+            <!-- Customer Name -->
+            <div class="form-group">
+                <label for="customerName">Full Name *</label>
+                <input type="text" id="customerName" placeholder="e.g. Navya Sharma" required>
+            </div>
+
+            <!-- Email Address -->
+            <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" placeholder="e.g. navya@example.com" required>
+            </div>
+
+            <!-- Product Selection -->
+            <div class="form-group">
+                <label for="shoeProduct">Select Shoe Model *</label>
+                <select id="shoeProduct" required>
+                    <option value="">-- Choose a pair of shoes --</option>
+                    <option value="Nike Air Zoom Pegasus 40">Nike Air Zoom Pegasus 40 ($130.00)</option>
+                    <option value="Adidas Ultraboost Light">Adidas Ultraboost Light ($190.00)</option>
+                    <option value="Puma Smash V2 Classic">Puma Smash V2 Classic ($55.00)</option>
+                    <option value="Reebok Club C 85 Vintage">Reebok Club C 85 Vintage ($85.00)</option>
+                    <option value="Timberland Heritage Boot">Timberland Heritage Boot ($210.00)</option>
+                </select>
+            </div>
+
+            <!-- Shoe Size and Quantity -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="shoeSize">Shoe Size *</label>
+                    <select id="shoeSize" required>
+                        <option value="US 7">US 7</option>
+                        <option value="US 8">US 8</option>
+                        <option value="US 9" selected>US 9</option>
+                        <option value="US 10">US 10</option>
+                        <option value="US 11">US 11</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity (Pairs) *</label>
+                    <input type="number" id="quantity" min="1" max="10" value="1" required>
+                </div>
+            </div>
+
+            <!-- Shipping Address -->
+            <div class="form-group">
+                <label for="address">Delivery Address *</label>
+                <textarea id="address" rows="3" placeholder="Enter full delivery street address and pincode" required></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="submitBtn">Send Order (HTTP POST)</button>
+        </form>
+
+        <!-- Response Receipt Box -->
+        <div id="receiptBox" class="receipt"></div>
+    </div>
+
+    <script>
+        const orderForm = document.getElementById("orderForm");
+        const submitBtn = document.getElementById("submitBtn");
+        const receiptBox = document.getElementById("receiptBox");
+
+        orderForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            // Construct payload object matching backend schema
+            const payload = {
+                customerName: document.getElementById("customerName").value.trim(),
+                email: document.getElementById("email").value.trim(),
+                shoeProduct: document.getElementById("shoeProduct").value,
+                shoeSize: document.getElementById("shoeSize").value,
+                quantity: parseInt(document.getElementById("quantity").value, 10),
+                address: document.getElementById("address").value.trim()
+            };
+
+            // Display loading state on button
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Transmitting order to server via POST...";
+            receiptBox.style.display = "none";
+
+            try {
+                // Post data asynchronously to Node.js backend
+                const response = await fetch("http://localhost:3000/api/orders", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.message || "Failed to process order.");
+                }
+
+                // Display success confirmation receipt
+                const ord = result.order;
+                receiptBox.className = "receipt receipt-success";
+                receiptBox.innerHTML = `
+                    <h3>✓ Order Confirmed &amp; Saved on Server!</h3>
+                    <p>${result.message}</p>
+                    <div class="receipt-details">
+                        <p><strong>Order Tracking ID:</strong> ${ord.orderId}</p>
+                        <p><strong>Customer:</strong> ${ord.customerName} (${ord.email})</p>
+                        <p><strong>Product Ordered:</strong> ${ord.shoeProduct} (Size: ${ord.shoeSize})</p>
+                        <p><strong>Quantity:</strong> ${ord.quantity} pair(s)</p>
+                        <p><strong>Total Charged:</strong> $${ord.totalAmount.toFixed(2)}</p>
+                        <p><strong>Shipping To:</strong> ${ord.shippingAddress}</p>
+                        <p><strong>Timestamp:</strong> ${new Date(ord.timestamp).toLocaleString()}</p>
+                    </div>
+                `;
+                receiptBox.style.display = "block";
+
+                // Reset form inputs
+                orderForm.reset();
+            } catch (error) {
+                // Display error receipt
+                receiptBox.className = "receipt receipt-error";
+                receiptBox.innerHTML = `
+                    <h3>✗ Order Submission Failed</h3>
+                    <p>${error.message}</p>
+                    <p style="font-size: 13px; margin-top: 6px;">
+                        Ensure the Node.js backend server is running on port 3000 (<code>node server.js</code>).
+                    </p>
+                `;
+                receiptBox.style.display = "block";
+                console.error("Order POST error:", error);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Send Order (HTTP POST)";
+            }
+        });
+    </script>
+</body>
+</html>

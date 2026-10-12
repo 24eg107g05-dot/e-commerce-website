@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "name": "Nike Air Zoom Pegasus 40",
+    "category": "Road Running",
+    "brand": "Nike",
+    "price": 130.00,
+    "rating": 4.8,
+    "sizes": [8, 9, 10, 11]
+  },
+  {
+    "id": 2,
+    "name": "Adidas Ultraboost Light",
+    "category": "Running & Lifestyle",
+    "brand": "Adidas",
+    "price": 190.00,
+    "rating": 4.9,
+    "sizes": [7.5, 8.5, 9.5, 10.5]
+  },
+  {
+    "id": 3,
+    "name": "Puma Smash V2 Classic",
+    "category": "Casual Sneaker",
+    "brand": "Puma",
+    "price": 55.00,
+    "rating": 4.5,
+    "sizes": [7, 8, 9, 10]
+  },
+  {
+    "id": 4,
+    "name": "Reebok Club C 85 Vintage",
+    "category": "Court Sneaker",
+    "brand": "Reebok",
+    "price": 85.00,
+    "rating": 4.7,
+    "sizes": [8, 9, 10]
+  },
+  {
+    "id": 5,
+    "name": "Timberland Heritage 6-Inch Boot",
+    "category": "Outdoor Boot",
+    "brand": "Timberland",
+    "price": 210.00,
+    "rating": 4.9,
+    "sizes": [9, 10, 11, 12]
+  }
+]

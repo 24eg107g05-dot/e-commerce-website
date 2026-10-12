@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch & Parse XML - SoleStride Shoes (Week 9)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            color: #1e3a8a;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-load {
+            background-color: #0d9488;
+            color: #ffffff;
+        }
+
+        .btn-load:hover {
+            background-color: #0f766e;
+        }
+
+        .btn-clear {
+            background-color: #94a3b8;
+            color: #ffffff;
+        }
+
+        .status {
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .status-loading {
+            background: #e0f2fe;
+            color: #0369a1;
+            display: block;
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: #dc2626;
+            display: block;
+            border-left: 4px solid #ef4444;
+        }
+
+        .status-success {
+            background: #dcfce7;
+            color: #166534;
+            display: block;
+            border-left: 4px solid #22c55e;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #f0fdfa;
+            color: #115e59;
+            font-weight: 700;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .price-badge {
+            font-weight: 700;
+            color: #16a34a;
+        }
+
+        .stock-badge {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>SoleStride Shoes — XML Product Fetcher & DOM Parser</h2>
+        <p class="subtitle">Week 9 Lab Experiment: Loading and parsing <code>products.xml</code> asynchronously using DOMParser.</p>
+
+        <div class="actions">
+            <button id="loadBtn" class="btn-load">Fetch Shoe Products (XML)</button>
+            <button id="clearBtn" class="btn-clear">Clear Table</button>
+        </div>
+
+        <div id="statusBox" class="status"></div>
+
+        <div id="tableWrapper">
+            <!-- Table dynamically generated from XML nodes -->
+        </div>
+    </div>
+
+    <script>
+        const loadBtn = document.getElementById("loadBtn");
+        const clearBtn = document.getElementById("clearBtn");
+        const statusBox = document.getElementById("statusBox");
+        const tableWrapper = document.getElementById("tableWrapper");
+
+        loadBtn.addEventListener("click", loadXmlProducts);
+        clearBtn.addEventListener("click", () => {
+            tableWrapper.innerHTML = "";
+            statusBox.style.display = "none";
+        });
+
+        async function loadXmlProducts() {
+            // Show loading status
+            statusBox.textContent = "Fetching and parsing products.xml...";
+            statusBox.className = "status status-loading";
+
+            try {
+                // Fetch XML document via Fetch API
+                const response = await fetch("products.xml");
+
+                if (!response.ok) {
+                    throw new Error(`HTTP Error! Status: ${response.status} (${response.statusText})`);
+                }
+
+                // Extract XML text
+                const xmlText = await response.text();
+
+                // Parse XML text into an XML Document using DOMParser
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+
+                // Check for XML parsing error elements
+                const parseError = xmlDoc.querySelector("parsererror");
+                if (parseError) {
+                    throw new Error("XML Parsing Error: " + parseError.textContent);
+                }
+
+                // Extract all <product> nodes
+                const productNodes = xmlDoc.getElementsByTagName("product");
+
+                if (productNodes.length === 0) {
+                    throw new Error("No <product> elements found in XML document.");
+                }
+
+                // Build HTML Table dynamically
+                let tableHtml = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Product Name</th>
+                                <th>Brand</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>In-Stock Units</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                // Helper to get text content safely from an XML tag
+                function getTagVal(parent, tagName) {
+                    const el = parent.getElementsByTagName(tagName)[0];
+                    return el ? el.textContent.trim() : "N/A";
+                }
+
+                for (let i = 0; i < productNodes.length; i++) {
+                    const p = productNodes[i];
+                    const id = getTagVal(p, "id");
+                    const name = getTagVal(p, "name");
+                    const brand = getTagVal(p, "brand");
+                    const category = getTagVal(p, "category");
+                    const price = parseFloat(getTagVal(p, "price")).toFixed(2);
+                    const stock = getTagVal(p, "stock");
+
+                    tableHtml += `
+                        <tr>
+                            <td><strong>${id}</strong></td>
+                            <td>${name}</td>
+                            <td>${brand}</td>
+                            <td>${category}</td>
+                            <td class="price-badge">$${price}</td>
+                            <td><span class="stock-badge">${stock} pairs in stock</span></td>
+                        </tr>
+                    `;
+                }
+
+                tableHtml += `</tbody></table>`;
+
+                tableWrapper.innerHTML = tableHtml;
+                statusBox.textContent = `✓ Successfully loaded and parsed ${productNodes.length} shoe products from XML!`;
+                statusBox.className = "status status-success";
+            } catch (error) {
+                tableWrapper.innerHTML = "";
+                statusBox.innerHTML = `✗ Failed to load XML: ${error.message}<br><small>Ensure this page is accessed through a local HTTP server.</small>`;
+                statusBox.className = "status status-error";
+                console.error("Fetch XML error:", error);
+            }
+        }
+    </script>
+</body>
+</html>

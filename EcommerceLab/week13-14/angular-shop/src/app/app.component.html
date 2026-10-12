@@ -1,0 +1,157 @@
+<!-- Top Header -->
+<header class="navbar">
+  <div class="nav-content">
+    <div class="brand">
+      <h1>SoleStride Shoes</h1>
+      <span class="tagline">Single Page Application — Angular Services &amp; Forms</span>
+    </div>
+    <div class="cart-pill">
+      🛒 Cart: <strong>{{ cart.length }} items</strong> (${{ cartTotal | number:'1.2-2' }})
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <!-- Order Confirmation Banner (shown ONLY when form is valid and cart had items) -->
+  <section class="confirmation-card" *ngIf="confirmedOrder">
+    <div class="confirmation-header">
+      <h2>🎉 Order Confirmed!</h2>
+      <span class="order-id">Tracking Number: {{ confirmedOrder.orderId }}</span>
+    </div>
+    <p>Thank you, <strong>{{ confirmedOrder.fullName }}</strong>! Your shoe order has been placed successfully.</p>
+    <p class="server-msg" *ngIf="serverMessage">✅ {{ serverMessage }}</p>
+    
+    <div class="order-summary-box">
+      <h4>Order Details:</h4>
+      <ul>
+        <li *ngFor="let item of confirmedOrder.items">
+          <strong>{{ item.brand }}</strong> {{ item.name }} (Size: {{ item.size }}) — ${{ item.price | number:'1.2-2' }}
+        </li>
+      </ul>
+      <p class="final-total"><strong>Grand Total Paid:</strong> ${{ confirmedOrder.totalAmount | number:'1.2-2' }}</p>
+      <p><strong>Shipping To:</strong> {{ confirmedOrder.address }}</p>
+      <p><strong>Confirmation Sent To:</strong> {{ confirmedOrder.email }}</p>
+    </div>
+  </section>
+
+  <div class="layout-grid">
+    <!-- Left Column: Products from ProductService -->
+    <section class="catalog-section">
+      <h2 class="section-title">👟 Footwear Catalogue (via ProductService)</h2>
+      
+      <div class="catalog-grid">
+        <div class="shoe-card" *ngFor="let shoe of products">
+          <div class="card-tag">{{ shoe.category }}</div>
+          <h3 class="shoe-name">{{ shoe.name }}</h3>
+          <p class="shoe-brand">Brand: <strong>{{ shoe.brand }}</strong> | Size: {{ shoe.size }}</p>
+          <p class="shoe-desc">{{ shoe.description }}</p>
+          
+          <div class="card-bottom">
+            <span class="shoe-price">${{ shoe.price | number:'1.2-2' }}</span>
+            <button 
+              class="btn-cart" 
+              [disabled]="!shoe.inStock"
+              (click)="addToCart(shoe)">
+              {{ shoe.inStock ? '+ Add to Cart' : 'Out of Stock' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Shopping Cart & Checkout Form -->
+    <aside class="sidebar-section">
+      <!-- Active Cart Box -->
+      <div class="panel cart-panel">
+        <h3 class="panel-title">🛒 Your Cart ({{ cart.length }})</h3>
+
+        <div *ngIf="cart.length === 0" class="empty-cart-note">
+          Your cart is currently empty. Add shoes from the catalog to place an order.
+        </div>
+
+        <div *ngIf="cart.length > 0">
+          <table class="cart-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Price</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of cart; let i = index">
+                <td>{{ item.name }} ({{ item.size }})</td>
+                <td>${{ item.price | number:'1.2-2' }}</td>
+                <td>
+                  <button class="btn-remove" (click)="removeFromCart(i)">Remove</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="cart-total-bar">
+            <span>Total Payable:</span>
+            <span class="total-number">${{ cartTotal | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Checkout Order Form -->
+      <div class="panel form-panel">
+        <h3 class="panel-title">📦 Customer Checkout Form</h3>
+
+        <!-- Form Validation Error Alert -->
+        <div class="form-error-banner" *ngIf="formError">
+          ⚠ {{ formError }}
+        </div>
+
+        <form (ngSubmit)="submitOrder()" #orderForm="ngForm" novalidate>
+          <!-- Full Name Field -->
+          <div class="form-group">
+            <label for="fullName">Full Name *</label>
+            <input 
+              type="text" 
+              id="fullName" 
+              name="fullName" 
+              [(ngModel)]="customer.fullName" 
+              placeholder="e.g. Navya Sharma"
+              required>
+          </div>
+
+          <!-- Email Field -->
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              [(ngModel)]="customer.email" 
+              placeholder="e.g. navya@example.com"
+              required>
+          </div>
+
+          <!-- Shipping Address Field -->
+          <div class="form-group">
+            <label for="address">Shipping Delivery Address *</label>
+            <textarea 
+              id="address" 
+              name="address" 
+              rows="3" 
+              [(ngModel)]="customer.address" 
+              placeholder="Enter full shipping street address and pincode"
+              required></textarea>
+          </div>
+
+          <!-- Checkout Button -->
+          <button type="submit" class="btn-checkout" [disabled]="isSubmitting">
+            {{ isSubmitting ? 'Submitting to server...' : 'Confirm &amp; Place Order ($' + (cartTotal | number:'1.2-2') + ')' }}
+          </button>
+        </form>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer class="footer">
+  SoleStride Shoes &copy; 2026 — Weeks 13–14 Single-Page Application (Angular Forms &amp; Services)
+</footer>

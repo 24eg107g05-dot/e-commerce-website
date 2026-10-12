@@ -1,0 +1,16 @@
+<!-- ===================================================================
+     SoleStride Shoes - Document Type Definition (DTD) (Week 6 Lab)
+     Defines structural grammar and validation rules for shoe catalog
+     =================================================================== -->
+
+<!ELEMENT catalog (shoe+)>
+
+<!ELEMENT shoe (name, brand, category, price, size, inStock)>
+<!ATTLIST shoe id ID #REQUIRED>
+
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT brand (#PCDATA)>
+<!ELEMENT category (#PCDATA)>
+<!ELEMENT price (#PCDATA)>
+<!ELEMENT size (#PCDATA)>
+<!ELEMENT inStock (#PCDATA)>

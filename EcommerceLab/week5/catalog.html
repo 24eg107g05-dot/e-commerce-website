@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoe Product Catalogue - SoleStride</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Top Sticky Header with Navigation and Cart Counter -->
+    <header>
+        <div class="brand-title">SoleStride Shoes</div>
+        <div class="cart-indicator">
+            <span>Cart Items:</span>
+            <span id="cartCount" class="cart-count">0</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Search and Sort Filter Toolbar -->
+        <section class="controls-bar">
+            <!-- Search Input -->
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Search shoes by name, brand, or category (e.g., Nike, Boots, Retro)..."
+                >
+            </div>
+
+            <!-- Price Sorter -->
+            <div class="sort-box">
+                <label for="sortSelect"><strong>Sort By:</strong></label>
+                <select id="sortSelect">
+                    <option value="default">Featured / Default</option>
+                    <option value="low-to-high">Price: Low to High</option>
+                    <option value="high-to-low">Price: High to Low</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Product Cards Grid (Populated dynamically via JavaScript) -->
+        <main id="productGrid" class="product-grid">
+            <!-- Dynamic shoe cards inserted here via script.js -->
+        </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast"></div>
+
+    <!-- External Script -->
+    <script src="script.js"></script>
+</body>
+</html>

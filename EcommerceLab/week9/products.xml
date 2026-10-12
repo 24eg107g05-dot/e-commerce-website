@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<products>
+    <product>
+        <id>P101</id>
+        <name>Nike Air Zoom Pegasus 40</name>
+        <category>Road Running</category>
+        <brand>Nike</brand>
+        <price>130.00</price>
+        <stock>24</stock>
+    </product>
+    <product>
+        <id>P102</id>
+        <name>Adidas Ultraboost Light</name>
+        <category>Running</category>
+        <brand>Adidas</brand>
+        <price>190.00</price>
+        <stock>18</stock>
+    </product>
+    <product>
+        <id>P103</id>
+        <name>Puma Smash V2 Classic</name>
+        <category>Casual Sneaker</category>
+        <brand>Puma</brand>
+        <price>55.00</price>
+        <stock>35</stock>
+    </product>
+    <product>
+        <id>P104</id>
+        <name>Reebok Club C 85 Vintage</name>
+        <category>Court Sneaker</category>
+        <brand>Reebok</brand>
+        <price>85.00</price>
+        <stock>15</stock>
+    </product>
+    <product>
+        <id>P105</id>
+        <name>Timberland Heritage 6-Inch Boot</name>
+        <category>Outdoor Boot</category>
+        <brand>Timberland</brand>
+        <price>210.00</price>
+        <stock>10</stock>
+    </product>
+</products>

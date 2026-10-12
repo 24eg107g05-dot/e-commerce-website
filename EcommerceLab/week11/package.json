@@ -1,0 +1,13 @@
+{
+  "name": "week11-typescript-products",
+  "version": "1.0.0",
+  "description": "SoleStride Shoes - TypeScript Classes and Interfaces Demo",
+  "main": "products.js",
+  "scripts": {
+    "build": "npx -p typescript tsc",
+    "start": "npx -p typescript tsc && node products.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}

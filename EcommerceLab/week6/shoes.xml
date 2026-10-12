@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ===================================================================
+     SoleStride Shoes - XML Data Document (Week 6 Lab)
+     References external DTD 'shoes.dtd' for strict validation
+     =================================================================== -->
+<!DOCTYPE catalog SYSTEM "shoes.dtd">
+
+<catalog>
+    <shoe id="s101">
+        <name>Nike Air Zoom Pegasus 40</name>
+        <brand>Nike</brand>
+        <category>Running</category>
+        <price>130.00</price>
+        <size>US 9.5</size>
+        <inStock>Yes</inStock>
+    </shoe>
+
+    <shoe id="s102">
+        <name>Adidas Ultraboost Light</name>
+        <brand>Adidas</brand>
+        <category>Running</category>
+        <price>190.00</price>
+        <size>US 10</size>
+        <inStock>Yes</inStock>
+    </shoe>
+
+    <shoe id="s103">
+        <name>Puma Smash V2 Classic</name>
+        <brand>Puma</brand>
+        <category>Casual</category>
+        <price>55.00</price>
+        <size>US 8.5</size>
+        <inStock>Yes</inStock>
+    </shoe>
+
+    <shoe id="s104">
+        <name>Timberland Heritage Boot</name>
+        <brand>Timberland</brand>
+        <category>Outdoor</category>
+        <price>210.00</price>
+        <size>US 11</size>
+        <inStock>No</inStock>
+    </shoe>
+</catalog>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch & Parse JSON - SoleStride Shoes (Week 9)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            color: #1e3a8a;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-load {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+
+        .btn-load:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-clear {
+            background-color: #94a3b8;
+            color: #ffffff;
+        }
+
+        .status {
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .status-loading {
+            background: #e0f2fe;
+            color: #0369a1;
+            display: block;
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: #dc2626;
+            display: block;
+            border-left: 4px solid #ef4444;
+        }
+
+        .status-success {
+            background: #dcfce7;
+            color: #166534;
+            display: block;
+            border-left: 4px solid #22c55e;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: #334155;
+            font-weight: 700;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .price-badge {
+            font-weight: 700;
+            color: #16a34a;
+        }
+
+        .rating-badge {
+            background: #fef3c7;
+            color: #b45309;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>SoleStride Shoes — JSON Product Fetcher</h2>
+        <p class="subtitle">Week 9 Lab Experiment: Loading and parsing <code>products.json</code> asynchronously via Fetch API.</p>
+
+        <div class="actions">
+            <button id="loadBtn" class="btn-load">Fetch Shoe Products (JSON)</button>
+            <button id="clearBtn" class="btn-clear">Clear Table</button>
+        </div>
+
+        <div id="statusBox" class="status"></div>
+
+        <div id="tableWrapper">
+            <!-- Table dynamically populated via JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        const loadBtn = document.getElementById("loadBtn");
+        const clearBtn = document.getElementById("clearBtn");
+        const statusBox = document.getElementById("statusBox");
+        const tableWrapper = document.getElementById("tableWrapper");
+
+        loadBtn.addEventListener("click", loadJsonProducts);
+        clearBtn.addEventListener("click", () => {
+            tableWrapper.innerHTML = "";
+            statusBox.style.display = "none";
+        });
+
+        async function loadJsonProducts() {
+            // Show loading message
+            statusBox.textContent = "Fetching and parsing products.json...";
+            statusBox.className = "status status-loading";
+
+            try {
+                // Fetch JSON asynchronously
+                const response = await fetch("products.json");
+
+                if (!response.ok) {
+                    throw new Error(`HTTP Error! Status: ${response.status} (${response.statusText})`);
+                }
+
+                // Parse JSON response body
+                const products = await response.json();
+
+                // Build HTML Table dynamically
+                let tableHtml = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Product Name</th>
+                                <th>Brand</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Rating</th>
+                                <th>Available Sizes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                products.forEach(p => {
+                    tableHtml += `
+                        <tr>
+                            <td>#${p.id}</td>
+                            <td><strong>${p.name}</strong></td>
+                            <td>${p.brand}</td>
+                            <td>${p.category}</td>
+                            <td class="price-badge">$${p.price.toFixed(2)}</td>
+                            <td><span class="rating-badge">★ ${p.rating}</span></td>
+                            <td>${p.sizes.join(", ")}</td>
+                        </tr>
+                    `;
+                });
+
+                tableHtml += `</tbody></table>`;
+
+                tableWrapper.innerHTML = tableHtml;
+                statusBox.textContent = `✓ Successfully loaded and parsed ${products.length} shoe products from JSON!`;
+                statusBox.className = "status status-success";
+            } catch (error) {
+                tableWrapper.innerHTML = "";
+                statusBox.innerHTML = `✗ Failed to load JSON: ${error.message}<br><small>Ensure this page is accessed through a local HTTP server.</small>`;
+                statusBox.className = "status status-error";
+                console.error("Fetch JSON error:", error);
+            }
+        }
+    </script>
+</body>
+</html>

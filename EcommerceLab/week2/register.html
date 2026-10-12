@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Registration - SoleStride Shoes</title>
+</head>
+<body>
+    <!-- Store Header -->
+    <header>
+        <h1>SoleStride Shoes</h1>
+        <p>Premium Footwear Store - New Member Registration</p>
+        <nav>
+            <a href="../week1/index.html">Home</a> |
+            <a href="../week1/login.html">Login</a> |
+            <a href="register.html">Register</a>
+        </nav>
+        <hr>
+    </header>
+
+    <!-- Main Registration Section -->
+    <main>
+        <h2>Create an Account</h2>
+        <p>Register as a member to enjoy member discounts, order tracking, and express shoe checkout.</p>
+
+        <!-- Registration Form with table formatting for neat layout -->
+        <form action="#" method="post">
+            <fieldset>
+                <legend><strong>Personal & Account Details</strong></legend>
+                
+                <table cellpadding="6">
+                    <!-- Full Name Field -->
+                    <tr>
+                        <td><label for="fullName">Full Name:</label></td>
+                        <td><input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required></td>
+                    </tr>
+
+                    <!-- Email Field -->
+                    <tr>
+                        <td><label for="email">Email Address:</label></td>
+                        <td><input type="email" id="email" name="email" placeholder="name@example.com" required></td>
+                    </tr>
+
+                    <!-- Phone Number Field -->
+                    <tr>
+                        <td><label for="phone">Phone Number:</label></td>
+                        <td><input type="tel" id="phone" name="phone" placeholder="e.g. 9876543210" pattern="[0-9]{10}" required></td>
+                    </tr>
+
+                    <!-- Password Field -->
+                    <tr>
+                        <td><label for="password">Password:</label></td>
+                        <td><input type="password" id="password" name="password" placeholder="Minimum 6 characters" minlength="6" required></td>
+                    </tr>
+
+                    <!-- Preferred Shoe Size -->
+                    <tr>
+                        <td><label for="shoeSize">Preferred Shoe Size (US):</label></td>
+                        <td>
+                            <select id="shoeSize" name="shoeSize">
+                                <option value="7">US 7</option>
+                                <option value="8" selected>US 8</option>
+                                <option value="9">US 9</option>
+                                <option value="10">US 10</option>
+                                <option value="11">US 11</option>
+                                <option value="12">US 12</option>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <!-- Shipping Address Field -->
+                    <tr>
+                        <td valign="top"><label for="address">Shipping Address:</label></td>
+                        <td>
+                            <textarea id="address" name="address" rows="4" cols="35" placeholder="Enter street address, city, state, and pincode" required></textarea>
+                        </td>
+                    </tr>
+
+                    <!-- Terms Agreement Checkbox -->
+                    <tr>
+                        <td colspan="2">
+                            <input type="checkbox" id="terms" name="terms" required>
+                            <label for="terms">I agree to the store Terms of Service and Privacy Policy.</label>
+                        </td>
+                    </tr>
+
+                    <!-- Form Action Buttons -->
+                    <tr>
+                        <td colspan="2">
+                            <input type="submit" value="Register Now">
+                            <input type="reset" value="Reset Form">
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+        </form>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <hr>
+        <p>&copy; 2026 SoleStride Shoe Store. All rights reserved. (Web Development Lab - Week 2)</p>
+    </footer>
+</body>
+</html>

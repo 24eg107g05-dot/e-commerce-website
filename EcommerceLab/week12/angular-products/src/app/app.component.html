@@ -1,0 +1,82 @@
+<!-- Store Navigation Bar with Cart Badge -->
+<header class="app-header">
+  <div class="header-container">
+    <div>
+      <!-- Demonstrating Interpolation -->
+      <h1 class="brand-title">{{ storeTitle }}</h1>
+      <p class="brand-subtitle">{{ storeSubtitle }}</p>
+    </div>
+
+    <!-- Event binding to toggle cart summary -->
+    <button class="cart-btn" (click)="toggleCart()">
+      🛒 Cart Items: <span class="cart-badge">{{ cartItemCount }}</span>
+    </button>
+  </div>
+</header>
+
+<main class="main-container">
+  <!-- Cart Summary Modal/Drawer using *ngIf -->
+  <section class="cart-drawer" *ngIf="showCartSummary">
+    <h3>Shopping Cart Summary</h3>
+    
+    <div *ngIf="cartItems.length === 0" class="empty-cart-msg">
+      Your cart is currently empty. Click "Add to Cart" on any shoe below!
+    </div>
+
+    <div *ngIf="cartItems.length > 0">
+      <ul class="cart-list">
+        <li *ngFor="let item of cartItems; let i = index" class="cart-list-item">
+          <span>{{ i + 1 }}. <strong>{{ item.brand }}</strong> {{ item.name }}</span>
+          <span class="cart-item-price">${{ item.price | number:'1.2-2' }}</span>
+        </li>
+      </ul>
+      <div class="cart-total-row">
+        <strong>Total Amount:</strong>
+        <span class="total-price">${{ cartTotal | number:'1.2-2' }}</span>
+      </div>
+      <button class="btn-clear-cart" (click)="clearCart()">Clear Cart</button>
+    </div>
+  </section>
+
+  <!-- Section Title -->
+  <div class="section-header">
+    <h2>Available Shoe Collection</h2>
+    <p>Demonstrating Angular <code>*ngFor</code> loop and <code>*ngIf</code> conditional rendering:</p>
+  </div>
+
+  <!-- Product Cards Grid generated using *ngFor -->
+  <div class="product-grid">
+    <div class="product-card" *ngFor="let product of products">
+      <div class="card-body">
+        <span class="category-tag">{{ product.category }}</span>
+        <!-- Interpolation of product details -->
+        <h3 class="product-name">{{ product.name }}</h3>
+        <p class="brand-name">Brand: <strong>{{ product.brand }}</strong></p>
+        <p class="product-desc">{{ product.description }}</p>
+        
+        <!-- Demonstrating *ngIf for Stock Status -->
+        <div class="stock-badge">
+          <span class="in-stock" *ngIf="product.inStock">✓ In Stock & Ready to Ship</span>
+          <span class="out-of-stock" *ngIf="!product.inStock">✗ Currently Out of Stock</span>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="product-price">${{ product.price | number:'1.2-2' }}</div>
+        
+        <!-- Event Binding: (click)="addToCart(product)" -->
+        <!-- Demonstrating conditional attribute [disabled]="!product.inStock" -->
+        <button 
+          class="btn-add-cart" 
+          [disabled]="!product.inStock"
+          (click)="addToCart(product)">
+          Add to Cart
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="app-footer">
+  SoleStride Shoes &copy; 2026 — Angular Components & Directives (Web Dev Lab Week 12)
+</footer>

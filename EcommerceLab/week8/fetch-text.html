@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoleStride Shoes - Fetch Text Data (Week 8)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            color: #1e3a8a;
+            margin-bottom: 6px;
+        }
+
+        p.description {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-fetch {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+
+        .btn-fetch:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-clear {
+            background-color: #94a3b8;
+            color: #ffffff;
+        }
+
+        .btn-clear:hover {
+            background-color: #64748b;
+        }
+
+        /* Status & content display areas */
+        .status-box {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .status-loading {
+            color: #2563eb;
+            display: block;
+        }
+
+        .status-error {
+            color: #dc2626;
+            display: block;
+            background: #fee2e2;
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 4px solid #ef4444;
+        }
+
+        .status-success {
+            color: #16a34a;
+            display: block;
+        }
+
+        pre.display-box {
+            background-color: #0f172a;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            min-height: 150px;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #1e293b;
+        }
+
+        .info-note {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #e0f2fe;
+            border-left: 4px solid #0284c7;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #0369a1;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>SoleStride Shoes — Asynchronous Text Loader</h2>
+        <p class="description">Demonstrating modern asynchronous JavaScript (Fetch API & Promises) to fetch text files asynchronously.</p>
+
+        <!-- Control Buttons -->
+        <div class="actions">
+            <button id="loadBtn" class="btn-fetch">Fetch Store Info (store.txt)</button>
+            <button id="clearBtn" class="btn-clear">Clear Output</button>
+        </div>
+
+        <!-- Status Message Element -->
+        <div id="statusMessage" class="status-box"></div>
+
+        <!-- Text Display Box -->
+        <pre id="contentDisplay" class="display-box">Click "Fetch Store Info" above to load asynchronous store text.</pre>
+
+        <!-- Development Server Notice -->
+        <div class="info-note">
+            <strong>Important CORS Notice:</strong> Browsers restrict direct `file://` fetch requests for security. Run this file through a local web server (such as `npx serve .` or Python `python -m http.server 8000`). Detailed instructions are provided in the README.
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const loadBtn = document.getElementById("loadBtn");
+        const clearBtn = document.getElementById("clearBtn");
+        const statusMessage = document.getElementById("statusMessage");
+        const contentDisplay = document.getElementById("contentDisplay");
+
+        // Event listener to trigger asynchronous fetch
+        loadBtn.addEventListener("click", fetchStoreText);
+
+        // Event listener to clear output
+        clearBtn.addEventListener("click", () => {
+            contentDisplay.textContent = 'Click "Fetch Store Info" above to load asynchronous store text.';
+            statusMessage.style.display = "none";
+            statusMessage.className = "status-box";
+        });
+
+        /**
+         * Asynchronously fetch store.txt using Fetch API
+         */
+        async function fetchStoreText() {
+            // Display loading state
+            statusMessage.textContent = "Loading data from store.txt...";
+            statusMessage.className = "status-box status-loading";
+
+            try {
+                // Initiating HTTP GET request using Fetch API
+                const response = await fetch("store.txt");
+
+                // Check if HTTP response status is OK (200-299)
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status} (${response.statusText})`);
+                }
+
+                // Parse the response body as plain text
+                const textData = await response.text();
+
+                // Display retrieved content in the PRE tag
+                contentDisplay.textContent = textData;
+
+                // Update status banner
+                statusMessage.textContent = "✓ Successfully loaded store.txt via Fetch API asynchronously!";
+                statusMessage.className = "status-box status-success";
+            } catch (error) {
+                // Handle network errors or server issues
+                contentDisplay.textContent = "Failed to load content. See error details above.";
+                statusMessage.innerHTML = `✗ Fetch Error: ${error.message}<br><small>If testing directly via file://, please run using a local server (e.g. npx serve).</small>`;
+                statusMessage.className = "status-box status-error";
+                console.error("Fetch API error:", error);
+            }
+        }
+    </script>
+</body>
+</html>
